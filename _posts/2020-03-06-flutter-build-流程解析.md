@@ -11,16 +11,13 @@ tags:
     - 源码
     - iOS
 ---
-# flutter build 流程解析
 
-[TOC]
 
 以编译一个aot模式的iOS版本的命令为例, 我们可以执行以下命令.
 
 ```shell
 flutter build aot --target-platform=ios --release
 ```
-
 
 那么这个命令内部做了哪些事情, 这篇文章主要跟踪这条命令来探索下Flutter的编译流程.
 
@@ -40,7 +37,7 @@ flutter build aot --target-platform=ios --release
     > Tools • Dart 2.7.0
 
 
-## 入口 flutter
+# 入口 flutter
 **${FLUTTER_ROOT}/bin/flutter**脚本入口, 这是一个shell脚本, 核心代码就下面这一句.
 
 ```shell
@@ -55,9 +52,9 @@ flutter build aot --target-platform=ios --release
 - **$SNAPSHOT_PATH:** 运行的snapshot文件([什么是snapshot](https://github.com/dart-lang/sdk/wiki/Snapshots)), 这里是 `${FLUTTER_ROOT}/bin/cache/flutter_tools.snapshot`
 - **$@:** 透传用户参数
 
-## flutter_tools
+# flutter_tools
 
-### flutter_tools.dart
+## flutter_tools.dart
 由上面的分析可以看出接下来的关键代码在`flutter_tools`这里.
 我们可以在 `${FLUTTER_ROOT}/packages/flutter_tools/bin/flutter_tools.dart` 找到源码
 ```dart
@@ -66,7 +63,7 @@ void main(List<String> args) {
   executable.main(args);
 }
 ```
-### executable.dart
+## executable.dart
 这里调用了 `executable` 的main方法, 该文件在 `${FLUTTER_ROOT}/packages/flutter_tools/lib/executable.dart` 可以找到.
 ```dart
 import 'runner.dart' as runner;
@@ -76,7 +73,7 @@ Future<void> main(List<String> args) async {
   await runner.run(args, <FlutterCommand>[...忽略具体参数...]);
 }
 ```
-### runner.dart
+## runner.dart
 接着这个方法包装了下参数执行`runner`的run方法, 该方法是 Flutter 命令行运行解析的通用方法, 在 `${FLUTTER_ROOT}/packages/flutter_tools/lib/runner.dart` 可以查看源码.
 ```dart
 Future<int> run(
@@ -112,7 +109,7 @@ Future<int> run(
 ```dart
 ["build", "aot", "--target-platform=ios", "--release", "--verbose"]
 ```
-### flutter_command_runner.dart & command_runner.dart
+## flutter_command_runner.dart & command_runner.dart
 
 ```dart
 class FlutterCommandRunner extend CommandRunner<void> {
@@ -160,7 +157,7 @@ class CommandRunner<T> {
 ```
 通过上下文我们可以知道这里的`command`是 `runner.run` 中的commands参数是`FlutterCommand`类型, 比如文章开头 `flutter build` 命令的实现在 `${FLUTTER_ROOT}/packages/flutter_tools/lib/src/commands/build.dart` 的 `BuildCommand` 类中.
 
-### build.dart & flutter_command.dart
+## build.dart & flutter_command.dart
 
 查看`BuildCommand`类, 并没有 @override `run` 函数, 通过继承链可以发现该方法在 `FlutterCommand`中, 具体的细节我在代码里备注了.
 ```dart
@@ -209,7 +206,7 @@ abstract class FlutterCommand extends Command<void> {
   }
 }
 ```
-### build_aot_command.dart & aot.dart
+## build_aot_command.dart & aot.dart
 
 `build aot`命令对应的子类BuildAotCommand中的方法.
 ```dart
@@ -353,7 +350,7 @@ class AotBuilder {
     lipo build/aot/arm64/App.framework/App -create -output build/aot/App.framework/App
     ```
 
-## Compile To Kernel
+# Compile To Kernel
 上面还有一个地方没具体展开的是编译到Kernel的过程. 还是以文章开头命令为例, aot编译模式对应调用的是 `AOTSnapshotter.compileKernel`. 
 ```dart
 class AOTSnapshotter {
@@ -468,7 +465,7 @@ ${FLUTTER_ROOT}/bin/cache/artifacts/engine/darwin-x64/frontend_server.dart.snaps
 path/to/testproject/main.dart 
 ```
 
-## frontend_server
+# frontend_server
 介于frontend_server.dart.snapshot是二进制文件, 没法查看具体代码, 通过路径分析找到了源码位置在 [flutter/engine](https://github.com/flutter/engine) 项目的 flutter_frontend_server目录下. 为了验证猜想我编译了iOS平台下的引擎, 将上面命令行snapshot替换成源码调用, 也方便后面阅读调试.
 
 ```shell
@@ -486,7 +483,7 @@ path/to/engine/src/third_party/dart/pkg/frontend_server/bin/frontend_server_star
 path/to/testproject/main.dart
 ```
 查看入口函数直接调用了 `frontend_server.dart` 中的 `starter` 函数.
-### frontend_server.dart
+## frontend_server.dart
 
 ```dart
 Future<int> starter(...) async {
@@ -506,7 +503,7 @@ Future<int> starter(...) async {
 }
 ```
 这个函数主要解析了下命令参数, 并创建 `FrontendCompiler` 实例执行 compile 操作.
-### FrontendCompiler
+## FrontendCompiler
 这个方法主要做了:
 1. 转发到`compileToKernel`方法编译出将 dart 源码转化成 Component 对象;
 2. 对 components 执行 transform.
@@ -574,7 +571,7 @@ class FrontendCompiler implements CompilerInterface {
   }
 }
 ```
-#### compileToKernel
+### compileToKernel
 这一步可以拆分成一下几个主要操作:
 1. 调用 `kernelForProgram` 函数将dart源码解析成 `Component` 对象;
 2. 运行全局转化器;
@@ -700,7 +697,7 @@ void _writePackage(KernelCompilationResults result, String package,
 下图是具体的调用栈.
 ![调用栈](https://ftp.bmp.ovh/imgs/2020/03/b362c1825045ac1a.png)
 
-##### kernelForProgram && generateKernelInternal
+#### kernelForProgram && generateKernelInternal
 ```dart
 
 Future<CompilerResult> generateKernelInternal({...}) async {
@@ -723,7 +720,7 @@ Future<CompilerResult> generateKernelInternal({...}) async {
 
 ```
 
-##### KernelTarget.buildComponent
+#### KernelTarget.buildComponent
 用来构建 component 的 kernel表示.
 ```dart
 @override
@@ -747,7 +744,7 @@ Future<CompilerResult> generateKernelInternal({...}) async {
     }, () => loader?.currentUriForCrashReporting);
   }
 ```
-######  Loader.buildBodies (loader.dart)
+#####  Loader.buildBodies (loader.dart)
 
 ```dart
 Future<Null> buildBodies() async {
@@ -763,7 +760,7 @@ Future<Null> buildBodies() async {
 ```
 此处的loader为SourceLoader，是在KernelTarget对象创建过程初始化的.
 
-###### SourceLoader.buildBody(source_loader.dart)
+##### SourceLoader.buildBody(source_loader.dart)
 
 ```dart
 Future<Null> buildBody(LibraryBuilder library) async {
@@ -792,7 +789,7 @@ Future<Null> buildBody(LibraryBuilder library) async {
 ```
 > 这里对源文件做了两次 tokenize, 以保持较低的内存使用.这里是第二次, 第一次在[buildOutline]中. 这次为了抑制词法错误.
 
-##### runGlobalTransformations
+#### runGlobalTransformations
 
 ```dart
 Future runGlobalTransformations(...) async {
@@ -836,7 +833,7 @@ Future runGlobalTransformations(...) async {
 }
 ```
 
-### writeDillFile
+## writeDillFile
 ```dart
 writeDillFile(....) async {
     final Component component = results.component;
@@ -860,7 +857,7 @@ writeDillFile(....) async {
     .....
   }
 ```
-#### BinaryPrinter.writeComponentFile
+### BinaryPrinter.writeComponentFile
 ```dart
 void writeComponentFile(Component component) {
     Timeline.timeSync("BinaryPrinter.writeComponentFile", () {
@@ -904,7 +901,7 @@ void writeComponentFile(Component component) {
 到此便完成的kernel编译, 以及生成.dill文件。
 
 
-## 参考
+# 参考
 - [AOT Compilation, Kernel, and other Dart Hackery](https://thosakwe.com/aot-compilation-and-other-dart-hackery/)
 - [Compiling the engine
 ](https://github.com/flutter/flutter/wiki/Compiling-the-engine)
