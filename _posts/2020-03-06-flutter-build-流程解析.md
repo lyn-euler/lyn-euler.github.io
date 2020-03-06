@@ -11,7 +11,7 @@ tags:
     - 源码
     - iOS
 ---
-
+[TOC]
 
 以编译一个aot模式的iOS版本的命令为例, 我们可以执行以下命令.
 
@@ -53,9 +53,10 @@ flutter build aot --target-platform=ios --release
 - **$@:** 透传用户参数
 
 # flutter_tools
+由上面的分析可以看出接下来的关键代码在`flutter_tools`这里.
 
 ## flutter_tools.dart
-由上面的分析可以看出接下来的关键代码在`flutter_tools`这里.
+
 我们可以在 `${FLUTTER_ROOT}/packages/flutter_tools/bin/flutter_tools.dart` 找到源码
 ```dart
 import 'package:flutter_tools/executable.dart' as executable;
