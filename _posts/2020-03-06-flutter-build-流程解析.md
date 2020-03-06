@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      flutter build 流程解析
-subtitle:   如何切换Xcode命令行工具
+subtitle:   源码解析
 date:       2020-03-06
 author:     Cosin鱼弦
 header-img: img/post-bg-flutter.png
