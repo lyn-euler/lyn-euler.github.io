@@ -1,4 +1,3 @@
-
 ---
 layout:     post
 title:      Swift Type Metadata
@@ -11,7 +10,6 @@ tags:
     - Swift
     - iOS
 ---
-# Swift Type Metadata
 
 [TOC]
 
