@@ -2,7 +2,7 @@
 ---
 layout:     post
 title:      Swift Type Metadata
-subtitle:   swift 最新type metadata
+subtitle:   -
 date:       2020-04-13
 author:     Lyzz
 header-img: img/post-bg-swift-metadta.jpg
@@ -11,6 +11,7 @@ tags:
     - Swift
     - iOS
 ---
+# Swift Type Metadata
 
 [TOC]
 
@@ -54,7 +55,7 @@ Swift中类型的`metadata record`是由编译期和runtime共同决定的. 对�
   紧接着`generic argument vector`. 按照结构体中声明的字段顺序, 以字节为单位,存储相对于结构体开始的偏移量(指针大小的整数).
 
 按官方文档的描述应该如下图, 
-![截屏2020-04-1516.47.56](media/15865148686427/%E6%88%AA%E5%B1%8F2020-04-1516.47.56.png)
+![截屏2020-04-1516.47.56](https://ftp.bmp.ovh/imgs/2020/04/cd1c2569cac87929.jpg)
 
 但是其中红色部分(`nominal type descriptor`)已经标记过时, 无奈只能把Swift源码翻出来看了看.
 ```swift
@@ -155,7 +156,7 @@ struct GenericParameterVector {
 
 我们知道Swift中Optional类型实现就是一种枚举类型, 所以`Optional Metadata`和`Enum Metadata`公用相同的基本布局. 但是由于可选型在反射和动态铸造(dynamic-casting)中的重要性, 有自己单独的类型区分.
 
-![](media/15865148686427/15867663532326.jpg)
+![](https://ftp.bmp.ovh/imgs/2020/04/ab07839099b4edb3.jpg)
 
 同样红色部分已经out of date. 下面是5.x版本最新的C-Type结构体表示
     
@@ -298,7 +299,7 @@ const FunctionTypeMetadata *swift_getFunctionTypeMetadata3(
 
 ## Class Metadata
 `Class Metadata`被设计成和Objective-C交互(interoperate)的, 所有的`Class Metadata`对 Objective-C 类对象也是有效的. 类的元数据指针被用作元类的值, 所以一个派生类的`metadata record`也可以作为其所有祖先类(ancestor class)有效的元类值.
-![](media/15865148686427/15869409991973.jpg)
+![Class Metadata](https://ftp.bmp.ovh/imgs/2020/04/ae71b3b80b045180.jpg)
 NOTE: 同样红色部分已经过时了, 最新的见下面struct表示.
 - **destructor pointer**
   相对元数据指针偏移量为-2的位置, 在`value witness table`之后.当类实例被销毁时, Swift的deallocator会调用该函数.
@@ -441,6 +442,6 @@ access函数不会返回null指针, 如果函数调用时元数据还没有被al
 
 
 ## 参考
-**[TypeMetadata](https://github.com/apple/swift/blob/master/docs/ABI/TypeMetadata.rst)**: https://github.com/apple/swift/blob/master/docs/ABI/TypeMetadata.rst
-**[Swift 5 Type Metadata 详解](https://juejin.im/post/5c7513e7e51d451ac30154aa):** https://juejin.im/post/5c7513e7e51d451ac30154aa
-**[Swift Source Code](https://github.com/apple/swift):** https://github.com/apple/swift
+- [TypeMetadata](https://github.com/apple/swift/blob/master/docs/ABI/TypeMetadata.rst)
+- [Swift 5 Type Metadata 详解](https://juejin.im/post/5c7513e7e51d451ac30154aa)
+- [Swift Source Code](https://github.com/apple/swift)
