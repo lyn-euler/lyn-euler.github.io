@@ -11,6 +11,8 @@ tags:
     - iOS
 ---
 
+# Swift Type Metadata
+
 [TOC]
 
 >最近在捣腾一个的小工具, 不得不把丢弃多年的 Swift 重新捡起来看了看. 中间用到一点反射, 但 Swift 在这方面羸弱的支持实在不堪入目, 但是这篇文章并不想对如何扩展reflection功能做过多阐述, 仅仅提供一点关于官方`Type Metadta`介绍和基于5.x版本的更新.
