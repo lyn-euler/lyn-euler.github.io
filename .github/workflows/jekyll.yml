@@ -1,0 +1,44 @@
+name: Jekyll site CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Jekyll Builder for GitHub Pages
+  # You may pin to the exact commit or the version.
+  # uses: fabacab/jekyll-builder-for-github-pages-action@0c1341fdcb51ef886778f27d43e76e792464f25e
+  uses: fabacab/jekyll-builder-for-github-pages-action@v1
+  with:
+    # If deploying to GitHub Pages, set this to the value of a GitHub Personal Access Token granted the `public_repo` and `repo_deployment` scopes.
+    secret_gh_pages_api_token: # optional
+    # Commands to run prior to build and deploy. Useful for ensuring build dependencies are up to date. For example, use `gem install bundler` to update Bundler to the latest available version.
+
+    pre_build_commands: # optional
+    # Commands to run after the Jekyll build and before a deploy.
+
+    post_build_commands: # optional
+    # Extra options to pass to `jekyll build`.
+
+    jekyll_build_opts: # optional
+    # Branch name to which this action will commit the result of the Jekyll build. Ignored for User or Organization repositories since only `master` can be used as a publishing source for those repos. This is automatically detected if you already have GitHub Pages publishing source defined in your repository settings.
+
+    gh_pages_publishing_source: # optional
+    # Name to use when making commits to the Git repository. This will default to the name associated with the GitHub account running the GitHub Actions workflow.
+
+    git_committer_name: # optional
+    # Email to use when making commits to the Git repository. This will default to the email associated with the GitHub account running the GitHub Actions workflow if the access token passed as `secret_gh_pages_api_token` has permission to access that data. If not, it will default to the value of `"${GITHUB_ACTOR}@users.noreply.github.com"`.
+    git_committer_email: # optional
+    # The commit message to use when commtting back to your GitHub Pages branch.
+
+    git_commit_message: # optional, default is Auto-commit Jekyll build from Jekyll Builder for GitHub Pages Action.
+
+        
