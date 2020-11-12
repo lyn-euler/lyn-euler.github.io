@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Swift Type Metadata
-subtitle:   -
+subtitle:   metadata
 date:       2020-04-13
 author:     Lyzz
 header-img: img/post-bg-swift-metadta.jpg
