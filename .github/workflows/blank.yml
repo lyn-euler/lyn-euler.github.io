@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v2
     ## Build
     - name: Build Site
-        uses: chabad360/hugo-actions@master
+      uses: chabad360/hugo-actions@master
     ## Publish
     - name: Publish Site
       uses: chabad360/hugo-actions@master
