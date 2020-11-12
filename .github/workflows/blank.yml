@@ -19,11 +19,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: hugo-deploy
-      # You may pin to the exact commit or the version.
-      # uses: reuixiy/hugo-deploy@1185ce893b699b1809ec27bebcd8212a8127fefa
-      uses: reuixiy/hugo-deploy@v1
-      env:
-        DEPLOY_REPO: lyn-euler/lyn-euler.github.io
-        DEPLOY_BRANCH: master
-        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+    ## Build
+    - name: Build Site
+      uses: chabad360/hugo-actions@master
+    ## Publish
+    - name: Publish Site
+      uses: chabad360/hugo-actions@master
+      with:
+        buildPath: 'public'
+        # Use if you have a need to build the site to another directory
+        # hugoVersion: 'extended_0.58.3'
+        # Use if your site requires a specific version of Hugo
+        # Append "extended_" to the begining to use Hugo Extended
+        # args: --gc --minify --cleanDestinationDir
