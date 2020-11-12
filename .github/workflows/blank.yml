@@ -1,0 +1,34 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    ## Build
+    - name: Build Site
+        uses: chabad360/hugo-actions@master
+    ## Publish
+    - name: Publish Site
+      uses: chabad360/hugo-actions@master
+      with:
+        buildPath: 'public'
+        # Use if you have a need to build the site to another directory
+        hugoVersion: 'extended_0.58.3'
+        # Use if your site requires a specific version of Hugo
+        # Append "extended_" to the begining to use Hugo Extended
+        args: --gc --minify --cleanDestinationDir
